@@ -143,7 +143,7 @@
 				mind.AddSpell(new /obj/effect/proc_holder/spell/self/verdant_sprout)
 			
 		//All familiars get this spell.
-		mind.AddSpell(/obj/effect/proc_holder/spell/invoked/projectile/arcynebolt/familiar)
+		mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/arcynebolt/familiar)
 
 /mob/living/simple_animal/pet/familiar/Initialize()
 	. = ..()
