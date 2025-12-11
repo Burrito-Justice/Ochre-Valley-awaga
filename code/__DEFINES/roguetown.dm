@@ -91,7 +91,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/dullahan,\ // CC Edit
 
 #define RACES_DESPISED \
-	// /datum/species/dullahan,\ // CC Edit
+	\ // CC Edit
 
 #define RACES_CONSTRUCT \
 	/datum/species/construct/metal,\
