@@ -12,8 +12,6 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 /datum/special_intent
 	var/name = "special intent"
 	var/desc = "desc"
-	var/mob/living/carbon/human/howner
-	var/obj/item/iparent
 
 	var/mob/living/howner
 	var/atom/movable/iparent
