@@ -21,6 +21,7 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 	light_power = 1.5
 	light_color = "#d4fcac"
 
+//Caustic Cove Edit
 /obj/structure/glowshroom/dendorite
 	var/timeleft = 5 MINUTES //balancing factor no longer relevant, uncommoent if gay // update: it was gay
 
@@ -32,6 +33,7 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 /obj/structure/glowshroom/dendorite/attackby(obj/item/W, mob/user, params)
 	// Dendorite glowshrooms don't electrocute when hit
 	. = ..()
+//Caustic Cove Edit End
 
 /obj/structure/glowshroom/fire_act(added, maxstacks)
 	visible_message(span_warning("[src] catches fire!"))
@@ -60,6 +62,8 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 		if(L.mind)
 			if(world.time > L.last_client_interact + 0.2 SECONDS)
 				return FALSE
+        
+    //Caustic Cove Edit
 		if(world.time < (L.mob_timers["kneestinger"] + 30 SECONDS))
 			dmg = electrodam/2 // reduced damage on repeat exposure 
 		L.Immobilize(d/2 SECONDS)
@@ -70,6 +74,8 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 			src.take_damage(30) //self-destructing plants woa.... .. .. . . 
 			if(!(L.m_intent == MOVE_INTENT_SNEAK || L.rogue_sneaking))
 				L.consider_ambush(always = TRUE)
+    //Caustic Cove Edit End
+    
 			if(L.throwing)
 				L.throwing.finalize(FALSE)
 			if(mover.loc != loc && L.stat == CONSCIOUS)
@@ -103,6 +109,7 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 		dmg = dendordam
 		d = debuffdir/2
 	var/mob/living/victim = movable_victim
+  //Caustic Cove Edit
 	if(world.time < (victim.mob_timers["kneestinger"] + 30 SECONDS))
 		dmg = electrodam/2
 	victim.Immobilize(d/2 SECONDS)
@@ -113,6 +120,7 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 		victim.emote("painscream")
 		if(!(victim.m_intent == MOVE_INTENT_SNEAK || victim.rogue_sneaking))
 			victim.consider_ambush(always = TRUE)
+  //Caustic Cove Edit End
 		if(victim.throwing)
 			victim.throwing.finalize(FALSE)
 		return TRUE
@@ -145,8 +153,10 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 			L.apply_status_effect(/datum/status_effect/buff/lightningstruck, d SECONDS)
 			if(L.electrocute_act(dmg, src, 1, SHOCK_NOSTUN)) // The kneestingers will let you pass if you worship dendor, but they won't take your stupid ass hitting them.
 				L.emote("painscream")
+        //Caustic Cove Edit
 				if(!(L.m_intent == MOVE_INTENT_SNEAK || L.rogue_sneaking))
 					L.consider_ambush(always = TRUE)
+        //Caustic Cove Edit End
 				if(L.throwing)
 					L.throwing.finalize(FALSE)
 				return FALSE
@@ -175,4 +185,3 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 	var/obj/effect/decal/cleanable/molten_object/I = new (get_turf(src))
 	I.desc = ""
 	qdel(src)
-
