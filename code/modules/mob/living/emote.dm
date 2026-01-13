@@ -665,7 +665,7 @@
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
 		//Caustic Edit
-		if(H.show_redflash)
+		if(H.show_redflash())
 			H.flash_fullscreen("redflash3")
 		//Caustic Edit End
 		H.AdjustSleeping(-50)
