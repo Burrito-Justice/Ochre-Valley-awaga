@@ -21,19 +21,14 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 	light_power = 1.5
 	light_color = "#d4fcac"
 
-//Caustic Cove Edit
+
 /obj/structure/glowshroom/dendorite
-	var/timeleft = 5 MINUTES //balancing factor no longer relevant, uncommoent if gay // update: it was gay
+	var/timeleft = null //5 MINUTES balancing factor no longer relevant, uncommoent if gay
 
 /obj/structure/glowshroom/dendorite/Initialize()
 	. = ..()
 	if(timeleft)
 		QDEL_IN(src, timeleft)
-
-/obj/structure/glowshroom/dendorite/attackby(obj/item/W, mob/user, params)
-	// Dendorite glowshrooms don't electrocute when hit
-	. = ..()
-//Caustic Cove Edit End
 
 /obj/structure/glowshroom/fire_act(added, maxstacks)
 	visible_message(span_warning("[src] catches fire!"))
@@ -58,29 +53,27 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 
 		if(HAS_TRAIT(L, TRAIT_KNEESTINGER_IMMUNITY)) //Dendor kneestinger immunity
 			return TRUE
+		//cc edit start
+		if(!(L.m_intent == MOVE_INTENT_SNEAK || L.rogue_sneaking))
+			if(!istype(src, /obj/structure/glowshroom/dendorite))
+				L.consider_ambush(always = TRUE)
 
 		if(L.mind)
 			if(world.time > L.last_client_interact + 0.2 SECONDS)
 				return FALSE
-        
-    //Caustic Cove Edit
 		if(world.time < (L.mob_timers["kneestinger"] + 30 SECONDS))
-			dmg = electrodam/2 // reduced damage on repeat exposure 
+			dmg = dmg/2 // reduced damage on repeat exposure
 		L.Immobilize(d/2 SECONDS)
 		L.apply_status_effect(/datum/status_effect/debuff/clickcd, d SECONDS)
 		L.apply_status_effect(/datum/status_effect/buff/lightningstruck, d SECONDS)
-		if(L.electrocute_act(dmg, src, 1, SHOCK_NOSTUN))
-			L.mob_timers["kneestinger"] = world.time
-			src.take_damage(30) //self-destructing plants woa.... .. .. . . 
-			if(!(L.m_intent == MOVE_INTENT_SNEAK || L.rogue_sneaking))
-				L.consider_ambush(always = TRUE)
-    //Caustic Cove Edit End
-    
-			if(L.throwing)
-				L.throwing.finalize(FALSE)
-			if(mover.loc != loc && L.stat == CONSCIOUS)
-				L.throw_at(get_step(L, throwdir), pick(1,5), 1, L, spin = FALSE)
-			return FALSE
+		L.electrocute_act(dmg, src, 1, SHOCK_NOSTUN)
+		L.mob_timers["kneestinger"] = world.time
+		src.take_damage(30) //self-destructing plants woa.... .. .. . . 
+		if(L.throwing)
+			L.throwing.finalize(FALSE)
+		if(mover.loc != loc && L.stat == CONSCIOUS)
+			L.throw_at(get_step(L, throwdir), pick(1,5), 1, L, spin = FALSE)
+		return FALSE//cc edit end
 	. = ..()
 
 /obj/structure/glowshroom/proc/can_zap(atom/movable/movable_victim)
@@ -102,29 +95,27 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 
 /obj/structure/glowshroom/proc/do_zap(atom/movable/movable_victim)
 	if(!isliving(movable_victim))
-		return FALSE
+		return FALSE //CC edit start
 	var/dmg = electrodam
 	var/d = debuffdir
 	if(istype(src, /obj/structure/glowshroom/dendorite))
 		dmg = dendordam
 		d = debuffdir/2
 	var/mob/living/victim = movable_victim
-  //Caustic Cove Edit
 	if(world.time < (victim.mob_timers["kneestinger"] + 30 SECONDS))
-		dmg = electrodam/2
+		dmg = dmg/2
+	if(!(victim.m_intent == MOVE_INTENT_SNEAK || victim.rogue_sneaking))
+		if(!istype(src, /obj/structure/glowshroom/dendorite))
+			victim.consider_ambush(always = TRUE)
 	victim.Immobilize(d/2 SECONDS)
 	victim.apply_status_effect(/datum/status_effect/debuff/clickcd, d SECONDS)
 	victim.apply_status_effect(/datum/status_effect/buff/lightningstruck, d SECONDS)
-	if(victim.electrocute_act(dmg, src, 1, SHOCK_NOSTUN))
-		victim.mob_timers["kneestinger"] = world.time
-		victim.emote("painscream")
-		if(!(victim.m_intent == MOVE_INTENT_SNEAK || victim.rogue_sneaking))
-			victim.consider_ambush(always = TRUE)
-  //Caustic Cove Edit End
-		if(victim.throwing)
-			victim.throwing.finalize(FALSE)
-		return TRUE
-	return FALSE
+	victim.electrocute_act(dmg, src, 1, SHOCK_NOSTUN)
+	victim.mob_timers["kneestinger"] = world.time
+	victim.emote("painscream")
+	if(victim.throwing)
+		victim.throwing.finalize(FALSE)
+	return FALSE //CC edit end
 
 /obj/structure/glowshroom/Bumped(atom/movable/bumper)
 	. = ..()
@@ -136,30 +127,28 @@ var/dendordam = 30 //FUCK YOOOOU DENDOR
 		do_zap(crosser)
 	. = ..()
 
-
-/obj/structure/glowshroom/attackby(obj/item/W, mob/user, params)
+//cc edit start
+/obj/structure/glowshroom/attackby(obj/item/W, mob/user, params) 
 	var/dmg = electrodam
 	var/d = debuffdir
 	if(istype(src, /obj/structure/glowshroom/dendorite))
-		dmg = dendordam
-		d = debuffdir/2
+		. = ..() //Dendorite shrooms were zapping, they shouldn't.
+		return FALSE
 	if(isliving(user) && W && user.z == z)
 		if(W.flags_1 & CONDUCT_1)
 			var/mob/living/L = user
 			if(world.time < (L.mob_timers["kneestinger"] + 30 SECONDS))
-				dmg = electrodam/2
+				dmg = dmg/2
+			if(!istype(src, /obj/structure/glowshroom/dendorite))
+				L.consider_ambush(always = TRUE)
 			L.Immobilize(d/2 SECONDS)
 			L.apply_status_effect(/datum/status_effect/debuff/clickcd, d SECONDS)
 			L.apply_status_effect(/datum/status_effect/buff/lightningstruck, d SECONDS)
-			if(L.electrocute_act(dmg, src, 1, SHOCK_NOSTUN)) // The kneestingers will let you pass if you worship dendor, but they won't take your stupid ass hitting them.
-				L.emote("painscream")
-        //Caustic Cove Edit
-				if(!(L.m_intent == MOVE_INTENT_SNEAK || L.rogue_sneaking))
-					L.consider_ambush(always = TRUE)
-        //Caustic Cove Edit End
-				if(L.throwing)
-					L.throwing.finalize(FALSE)
-				return FALSE
+			L.electrocute_act(dmg, src, 1, SHOCK_NOSTUN) // The kneestingers will let you pass if you worship dendor, but they won't take your stupid ass hitting them.
+			L.emote("painscream")
+			if(L.throwing)
+				L.throwing.finalize(FALSE)
+			return FALSE //CC edit end
 	..()
 
 
