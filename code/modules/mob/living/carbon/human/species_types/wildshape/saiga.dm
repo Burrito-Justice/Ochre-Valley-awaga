@@ -71,7 +71,12 @@
 /datum/species/shapesaiga/regenerate_icons(mob/living/carbon/human/H)
 	H.icon = 'icons/roguetown/mob/monster/saiga.dmi'
 	H.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
-	H.icon_state = "saiga"
+	//Caustic Edit - Tweak the Saiga to account for gender!
+	if(H.gender == "male")
+		H.icon_state = "buck"
+	else
+		H.icon_state = "saiga"
+	//Caustic Edit End
 	H.update_damage_overlays()
 	return TRUE
 
