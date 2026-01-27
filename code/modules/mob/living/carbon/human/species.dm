@@ -1072,9 +1072,9 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			H.remove_status_effect(/datum/status_effect/debuff/hungryt2)
 			//Cove edit start
 			if(!istype(H.loc, /obj/belly))
+				if(prob(3))
+					playsound(get_turf(H), pick('sound/vo/hungry1.ogg','sound/vo/hungry2.ogg','sound/vo/hungry3.ogg'), 100, TRUE, -1)
 			//Cove edit end
-			if(prob(3))
-				playsound(get_turf(H), pick('sound/vo/hungry1.ogg','sound/vo/hungry2.ogg','sound/vo/hungry3.ogg'), 100, TRUE, -1)
 
 	switch(H.hydration)
 //		if(HYDRATION_LEVEL_WATERLOGGED to INFINITY)
