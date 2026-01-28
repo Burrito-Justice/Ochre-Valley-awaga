@@ -1,6 +1,6 @@
 //Caustic Edit - Add properly gendered extensions for gnolls! This whole file is changed.
 /datum/voicepack/male/gnoll/get_sound(soundin, modifiers)
-		var/used
+	var/used
 	switch(soundin)
 		if("aggro")
 			used = pick('sound/vo/mobs/wwolf/roar.ogg')
@@ -43,7 +43,7 @@
 	return used
 
 /datum/voicepack/female/gnoll/get_sound(soundin, modifiers)
-		var/used
+	var/used
 	switch(soundin)
 		if("aggro")
 			used = pick('sound/vo/mobs/wwolf/roar.ogg')
