@@ -25,7 +25,7 @@ GLOBAL_LIST_EMPTY(reformation_portals)
 		return
 	if(!in_range(src, user))
 		return
-	var/portal_loc = get_turf(src) //OV ADD
+	var/turf/portal_loc = get_turf(src) //OV ADD
 	user.bring_body(portal_loc) //OV EDIT
 	user.rise_body()
 	qdel(src)
@@ -34,7 +34,7 @@ GLOBAL_LIST_EMPTY(reformation_portals)
 	soundloop.stop()
 	. = ..()
 
-/mob/dead/observer/proc/bring_body(var/portal_loc) //OV EDIT
+/mob/dead/observer/proc/bring_body(var/turf/portal_loc) //OV EDIT
 	if(!client)
 		return
 	if(!mind || QDELETED(mind.current))
@@ -99,7 +99,7 @@ GLOBAL_LIST_EMPTY(reformation_portals)
 	if(!in_range(src, user))
 		return
 	user.vore_death = FALSE
-	var/portal_loc = get_turf(src)
+	var/turf/portal_loc = get_turf(src)
 	user.bring_body(portal_loc)
 	user.rise_body()
 //OV edit end
