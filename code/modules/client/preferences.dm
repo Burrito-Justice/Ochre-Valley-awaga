@@ -249,6 +249,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	migrant  = new /datum/migrant_pref(src)
 	familiar_prefs = new /datum/familiar_prefs(src)
 
+	if(!sizecat)
+		sizecat = new /datum/sizecat/none
+
 	for(var/custom_name_id in GLOB.preferences_custom_names)
 		custom_names[custom_name_id] = get_default_name(custom_name_id)
 
