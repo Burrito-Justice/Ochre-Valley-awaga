@@ -80,7 +80,6 @@
 			change_penis_size_customizer(src)
 		if("Testicles")
 			change_testicle_size_customizer(src)
-//OV edit end
 
 /mob/living/carbon/proc/change_belly_size_customizer(mob/living/carbon/user) // This could have been done better, but i'm too stupid and tired to get something out of it
 	var/obj/item/organ/belly/_belly = getorganslot("belly")
@@ -90,18 +89,12 @@
 		to_chat(user, "<span class='warning'>What belly?</span>")
 		return
 	if (!prefs)
-	{
 		return
-	}
 
 	for (var/datum/customizer_entry/entry in prefs.customizer_entries)
-	{
 		if (istype(entry, /datum/customizer_entry/organ/belly))
-		{
 			belly_entry = entry
 			break
-		}
-	}
 
 	var/named_size = input(user, "Choose your belly size:", "Belly", find_key_by_value(GLOB.named_belly_sizes, belly_entry.belly_size)) as anything in GLOB.named_belly_sizes
 
@@ -114,6 +107,7 @@
 
 	_belly.belly_size = belly_entry.belly_size
 	user.regenerate_icons()
+//OV edit end
 
 /datum/customizer_entry/organ/butt
 	var/organ_size = DEFAULT_BUTT_SIZE
@@ -181,18 +175,12 @@
 		to_chat(user, "<span class='warning'>What butt?</span>")
 		return
 	if (!prefs)
-	{
 		return
-	}
 
 	for (var/datum/customizer_entry/entry in prefs.customizer_entries)
-	{
 		if (istype(entry, /datum/customizer_entry/organ/butt))
-		{
 			butt_entry = entry
 			break
-		}
-	}
 
 	var/named_size = input(user, "Choose your butt size:", "Butt", find_key_by_value(GLOB.named_butt_sizes, butt_entry.organ_size)) as anything in GLOB.named_butt_sizes
 

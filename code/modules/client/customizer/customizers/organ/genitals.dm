@@ -180,18 +180,12 @@
 		to_chat(user, "<span class='warning'>What penis?</span>")
 		return
 	if (!prefs)
-	{
 		return
-	}
 
 	for (var/datum/customizer_entry/entry in prefs.customizer_entries)
-	{
 		if (istype(entry, /datum/customizer_entry/organ/penis))
-		{
 			penis_entry = entry
 			break
-		}
-	}
 
 	var/named_size = input(user, "Choose your penis size:", "Penis", find_key_by_value(PENIS_SIZES_BY_NAME, penis_entry.penis_size)) as anything in PENIS_SIZES_BY_NAME
 
@@ -301,18 +295,12 @@
 		to_chat(user, "<span class='warning'>What testicles?</span>")
 		return
 	if (!prefs)
-	{
 		return
-	}
 
 	for (var/datum/customizer_entry/entry in prefs.customizer_entries)
-	{
 		if (istype(entry, /datum/customizer_entry/organ/testicles))
-		{
 			testicles_entry = entry
 			break
-		}
-	}
 
 	var/named_size = input(user, "Choose your ball size:", "Testicles", find_key_by_value(TESTICLE_SIZES_BY_NAME, testicles_entry.ball_size)) as anything in TESTICLE_SIZES_BY_NAME
 
@@ -406,18 +394,12 @@
 		to_chat(user, "<span class='warning'>What breasts?</span>")
 		return
 	if (!prefs)
-	{
 		return
-	}
 
 	for (var/datum/customizer_entry/entry in prefs.customizer_entries)
-	{
 		if (istype(entry, /datum/customizer_entry/organ/breasts))
-		{
 			breasts_entry = entry
 			break
-		}
-	}
 
 	var/named_size = input(user, "Choose your breast size:", "Breasts", find_key_by_value(BREAST_SIZES_BY_NAME, breasts_entry.breast_size)) as anything in BREAST_SIZES_BY_NAME
 
