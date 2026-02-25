@@ -137,7 +137,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/mastervol = 50
 
 	var/anonymize = TRUE
-	var/masked_examine = FALSE
+	var/masked_examine = TRUE //OV Edit: Because being able to see preferences is soorta important
 	var/full_examine = FALSE
 	var/mute_animal_emotes = FALSE
 	var/autoconsume = FALSE
@@ -249,8 +249,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	migrant  = new /datum/migrant_pref(src)
 	familiar_prefs = new /datum/familiar_prefs(src)
 
+	//OV edit
 	if(!sizecat)
 		sizecat = new /datum/sizecat/none
+	//OV edit end
 
 	for(var/custom_name_id in GLOB.preferences_custom_names)
 		custom_names[custom_name_id] = get_default_name(custom_name_id)
@@ -301,6 +303,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	validate_customizer_entries()
 	reset_all_customizer_accessory_colors()
 	randomize_all_customizer_accessories()
+	ensure_sizecat() //OV ADD
 	reset_descriptors()
 	taur_type = null
 
@@ -2480,21 +2483,17 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						new_body_size = clamp(new_body_size * 0.01, BODY_SIZE_MIN, BODY_SIZE_MAX)
 						features["body_size"] = new_body_size
 						//OV edit
+						ensure_sizecat(new_body_size)
 						switch(new_body_size)
 							if(0 to 0.45)
-								sizecat = new /datum/sizecat/micro
 								to_chat(user, span_alert("You are now considered a micro."))
 							if(0.45 to 0.85)
-								sizecat = new /datum/sizecat/small
 								to_chat(user, span_alert("You are now considered small."))
 							if(0.85 to 1.15)
-								sizecat = new /datum/sizecat/none
 								to_chat(user, span_alert("You are now considered a normal height."))
 							if(1.15 to 1.5)
-								sizecat = new /datum/sizecat/giant
 								to_chat(user, span_alert("You are now considered a giant."))
 							if(1.5 to INFINITY)
-								sizecat = new /datum/sizecat/macro
 								to_chat(user, span_alert("You are now considered a macro."))
 						//OV edit end
 				//Caustic edit
@@ -2887,18 +2886,26 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					load_character()
 
 				if("changeslot")
+					// Caustic Edit - Fixes duplicate slot names not showing up + different slot name presentation
 					var/list/choices = list()
+					var/choices_default
 					if(path)
 						var/savefile/S = new /savefile(path)
 						if(S)
 							for(var/i=1, i<=max_save_slots, i++)
 								var/name
 								S.cd = "/character[i]"
-								S["real_name"] >> name
-								if(!name)
-									name = "Slot[i]"
+								var/nickname = S["nickname"]
+								var/realname = S["real_name"]
+								if(!realname)
+									name = "[i] - \[EMPTY SLOT\]"
+								else
+									name = "[i] - [realname][nickname ? " ([nickname])" : ""]"
+								if(loaded_slot == i)
+									choices_default = name
 								choices[name] = i
-					var/choice = tgui_input_list(user, "CHOOSE A HERO","ROGUETOWN", choices)
+					var/choice = tgui_input_list(user, "CHOOSE A HERO","AZURE PEAK", choices, choices_default)
+					// Caustic Edit End
 					if(choice)
 						choice = choices[choice]
 						if(!load_character(choice))
@@ -3215,3 +3222,23 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	dat += GLOB.roleplay_readme
 	popup.set_content(dat.Join())
 	popup.open(FALSE)
+
+//OV edit
+/datum/preferences/proc/ensure_sizecat(new_body_size)
+	if(!new_body_size)
+		new_body_size = features["body_size"]
+		if(!new_body_size)
+			new_body_size = 1
+	switch(new_body_size)
+		if(0 to 0.45)
+			sizecat = new /datum/sizecat/micro
+		if(0.45 to 0.85)
+			sizecat = new /datum/sizecat/small
+		if(0.85 to 1.15)
+			sizecat = new /datum/sizecat/none
+		if(1.15 to 1.5)
+			sizecat = new /datum/sizecat/giant
+		if(1.5 to INFINITY)
+			sizecat = new /datum/sizecat/macro
+//	message_admins("ensure_sizecat run for [sizecat.name] at [new_body_size]")
+//OV edit end
