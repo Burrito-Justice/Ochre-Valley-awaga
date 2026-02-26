@@ -141,9 +141,15 @@ SUBSYSTEM_DEF(job)
 		if(length(job.virtue_restrictions) && ((player.client.prefs.virtue.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.extravirtue?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
 			JobDebug("FOC incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue.name]")
 			continue
-		if(length(job.vice_restrictions) && (player.client.prefs.charflaw.type in job.vice_restrictions))
-			JobDebug("FOC incompatible with vices, Player: [player], Job: [job.title], Vice: [player.client.prefs.charflaw.name]")
-			continue
+		if(length(job.vice_restrictions))
+			var/has_restricted_vice = FALSE
+			for(var/datum/charflaw/cf in player.client.prefs.charflaws)
+				if(cf.type in job.vice_restrictions)
+					JobDebug("FOC incompatible with vices, Player: [player], Job: [job.title], Vice: [cf.name]")
+					has_restricted_vice = TRUE
+					break
+			if(has_restricted_vice)
+				continue
 		if(job.plevel_req > player.client.patreonlevel())
 			JobDebug("FOC incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
