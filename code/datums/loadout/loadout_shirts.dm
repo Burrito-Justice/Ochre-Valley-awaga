@@ -150,10 +150,12 @@
 	path = /obj/item/clothing/suit/roguetown/armor/leather/vest
 	sort_category = "Shirts"
 
+///OV edit
 /datum/loadout_item/corset
 	name = "Corset"
 	path = /obj/item/clothing/suit/roguetown/armor/corset
 	sort_category = "Shirts"
+///OV edit end
 
 /datum/loadout_item/nun_habit
 	name = "Nun Habit"
